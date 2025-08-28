@@ -1,0 +1,137 @@
+Scenario-1
+
+{
+  "membershipId": "5~265642286+34+44+20250201+784461+AM+39",
+  "zipCode": "95340",
+  "benefitProductType": "Medical",
+  "languageCode": "11",
+  "service": {
+    "code": "A9543",
+    "type": "HCPC",
+    "description": "Adult Office visit Age 30-39",
+    "supportingService": {
+      "code": "470",
+      "type": "DRG"
+    },
+    "modifier": {
+      "modifierCode": "E1"
+    },
+    "diagnosisCode": "F33 40",
+    "placeOfService": {
+      "code": "22"
+    }
+  },
+  "providerInfo": [
+    {
+      "serviceLocation": "2722164",
+      "providerType": "PH",
+      "speciality": {
+        "code": "40301"
+      },
+      "taxIdentificationNumber": "611554535",
+      "taxIdQualifier": "// Not provided in your data",
+      "providerNetworks": {
+        "networkID": "01472"
+      },
+      "providerIdentificationNumber": "7514767",
+      "nationalProviderId": "1750347316",
+      "nationalNetworkParticipation": "// Not provided in your data",
+      "providerTier": "// Not provided in your data"
+    }
+  ]
+}
+
+
+121144.69
+
+
+Scenario - 2
+
+{
+  "membershipId": "5~265642286+34+44+20250201+784461+AM+39",
+  "zipCode": "92663",
+  "benefitProductType": "Medical",
+  "languageCode": "11",
+  "service": {
+    "code": "Q2041",
+    "type": "HCPC"
+    "description": "Adult Office visit Age 30-39",
+    "supportingService": {
+      "code": "470",
+      "type": "DRG"
+    },
+    "modifier": {
+      "modifierCode": "E1"
+    },
+    "diagnosisCode": "F33 40",
+    "placeOfService": {
+      "code": "22"
+    }
+  },
+  "providerInfo": [
+    {
+      "serviceLocation": "9570832",
+      "providerType": "PH",
+      "speciality": {
+        "code": "20104"
+      },
+      "taxIdentificationNumber": "330837750",
+      "taxIdQualifier": "// Not provided in your data",
+      "providerNetworks": {
+        "networkID": "00101"
+      },
+      "providerIdentificationNumber": "4138428",
+      "nationalProviderId": "1598712275",
+      "nationalNetworkParticipation": "// Not provided in your data",
+      "providerTier": "// Not provided in your data"
+    }
+  ]
+}
+
+
+
+
+Scenario -3 
+
+{
+  "membershipId": "5~265642286+34+44+20250201+784461+AM+39",
+  "zipCode": "54773",
+  "benefitProductType": "Medical",
+  "languageCode": "11",
+  "service": {
+    "code": "29875",
+    "type": "CPT4",
+    "description": "Adult Office visit Age 30-39",
+    "supportingService": {
+      "code": "470",
+      "type": "DRG"
+    },
+    "modifier": {
+      "modifierCode": "E1"
+    },
+    "diagnosisCode": "F33 40",
+    "placeOfService": {
+      "code": "24"
+    }
+  },
+  "providerInfo": [
+    {
+      "serviceLocation": "6681286",
+      "providerType": "PH",
+      "speciality": {
+        "code": "10301"
+      },
+      "taxIdentificationNumber": "923397581",
+      "taxIdQualifier": "// Not provided in your data",
+      "providerNetworks": {
+        "networkID": "03585"
+      },
+      "providerIdentificationNumber": "4984783",
+      "nationalProviderId": "1710939996",
+      "nationalNetworkParticipation": "// Not provided in your data",
+      "providerTier": "// Not provided in your data"
+    }
+  ]
+}
+ 
+
