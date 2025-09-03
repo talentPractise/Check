@@ -1,52 +1,30 @@
--- params: @service_cd, @service_type_cd, @place_of_service_cd
-WITH base AS (
-  SELECT
-    PROVIDER_BUSINESS_GROUP_NBR,
-    PAYMENT_METHOD_CD,
-    SERVICE_CD,
-    SERVICE_TYPE_CD,
-    PLACE_OF_SERVICE_CD,
-    SERVICE_GROUPING_PRIORITY_NBR,
-    SERVICE_GROUP_CHANGED_IND,
-    RATE,
-    CONTRACT_TYPE
-  FROM CET_RATES
-  WHERE SERVICE_CD = @service_cd
-    AND SERVICE_TYPE_CD = @service_type_cd
-    AND PLACE_OF_SERVICE_CD = @place_of_service_cd
-    AND CONTRACT_TYPE = 'N'
-),
-w AS (
-  SELECT
-    b.*,
-    MAX(b.RATE) OVER (
-      PARTITION BY
-        b.PROVIDER_BUSINESS_GROUP_NBR,
-        b.PAYMENT_METHOD_CD,
-        b.SERVICE_CD,
-        b.SERVICE_TYPE_CD,
-        b.PLACE_OF_SERVICE_CD
-    ) AS grp_max_rate,
-    COUNT(*) OVER (
-      PARTITION BY
-        b.PROVIDER_BUSINESS_GROUP_NBR,
-        b.PAYMENT_METHOD_CD,
-        b.SERVICE_CD,
-        b.SERVICE_TYPE_CD,
-        b.PLACE_OF_SERVICE_CD,
-        b.RATE
-    ) AS cnt_at_rate
-  FROM base b
-)
-SELECT
-  PROVIDER_BUSINESS_GROUP_NBR,
-  PAYMENT_METHOD_CD,
-  SERVICE_CD,
-  SERVICE_TYPE_CD,
-  PLACE_OF_SERVICE_CD,
-  SERVICE_GROUPING_PRIORITY_NBR,
-  SERVICE_GROUP_CHANGED_IND,
-  RATE
-FROM w
-WHERE RATE = grp_max_rate      -- at the max
-  AND cnt_at_rate >= 2;        -- with 2+ rows tied at that max
+Message for Kiran:
+I'm currently working on the story that we discussed earlier. I have written the complete logic (code). The only work left is testing for which I need to prepare payloads, but I'm finding it difficult to query and search for such data.
+I want such rows from CET_RATES that have multiple payment methods and each payment method has the same score in the payment_heirarchy table.
+After this, I want to test scenarios like:
+
+Scenario - 1:
+service_type_change_ind
+Y - pick this
+Y - pick this
+Y - pick this
+Y - pick this
+N
+N
+N
+
+Scenario-2:
+service_type_change_ind  service_type_priority_nbr
+N                                       200 - pick this
+N                                       200 - pick this
+N                                       200 - pick this
+N                                       200 - pick this
+
+Scenario - 3
+service_type_change_ind 
+Y - pick this
+N
+
+Scenario - 4
+service_type_change_ind
+N - pick this
