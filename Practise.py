@@ -23,13 +23,14 @@ SELECT
   service_type_cd,
   place_of_service_cd,
   payment_method_cd,
+  COUNT(*) AS rows_at_max,
+  -- optional: see which values present
   ARRAY_AGG(DISTINCT service_group_changed_ind) AS group_indicators,
-  ARRAY_AGG(DISTINCT score) AS scores_present,
-  COUNT(*) AS rows_at_max
+  ARRAY_AGG(DISTINCT score) AS scores_present
 FROM winners
 GROUP BY
   service_cd, service_type_cd, place_of_service_cd, payment_method_cd
 HAVING
-  CARDINALITY(ARRAY_AGG(DISTINCT service_group_changed_ind)) = 2   -- e.g., Y and N
-  AND CARDINALITY(ARRAY_AGG(DISTINCT score)) >= 2                   -- different scores present
+  COUNT(DISTINCT service_group_changed_ind) = 2   -- e.g., both 'Y' and 'N'
+  AND COUNT(DISTINCT score) >= 2                  -- different scores present
 LIMIT 10;
