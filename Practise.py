@@ -1,30 +1,35 @@
-Message for Kiran:
-I'm currently working on the story that we discussed earlier. I have written the complete logic (code). The only work left is testing for which I need to prepare payloads, but I'm finding it difficult to query and search for such data.
-I want such rows from CET_RATES that have multiple payment methods and each payment method has the same score in the payment_heirarchy table.
-After this, I want to test scenarios like:
-
-Scenario - 1:
-service_type_change_ind
-Y - pick this
-Y - pick this
-Y - pick this
-Y - pick this
-N
-N
-N
-
-Scenario-2:
-service_type_change_ind  service_type_priority_nbr
-N                                       200 - pick this
-N                                       200 - pick this
-N                                       200 - pick this
-N                                       200 - pick this
-
-Scenario - 3
-service_type_change_ind 
-Y - pick this
-N
-
-Scenario - 4
-service_type_change_ind
-N - pick this
+WITH joined AS (
+  SELECT r.*, p.score
+  FROM CET_RATES r
+  JOIN PAYMENT_METHOD_HIERARCHY p
+    ON r.PAYMENT_METHOD_CD = p.PAYMENT_METHOD_CD
+),
+maxed AS (
+  SELECT
+    joined.*,
+    MAX(rate) OVER (
+      PARTITION BY service_cd, service_type_cd, place_of_service_cd, payment_method_cd
+    ) AS max_rate_in_group
+  FROM joined
+),
+winners AS (
+  -- keep only rows at the max(rate) within each (svc, type, pos, payment)
+  SELECT *
+  FROM maxed
+  WHERE rate = max_rate_in_group
+)
+SELECT
+  service_cd,
+  service_type_cd,
+  place_of_service_cd,
+  payment_method_cd,
+  ARRAY_AGG(DISTINCT service_group_changed_ind) AS group_indicators,
+  ARRAY_AGG(DISTINCT score) AS scores_present,
+  COUNT(*) AS rows_at_max
+FROM winners
+GROUP BY
+  service_cd, service_type_cd, place_of_service_cd, payment_method_cd
+HAVING
+  CARDINALITY(ARRAY_AGG(DISTINCT service_group_changed_ind)) = 2   -- e.g., Y and N
+  AND CARDINALITY(ARRAY_AGG(DISTINCT score)) >= 2                   -- different scores present
+LIMIT 10;
