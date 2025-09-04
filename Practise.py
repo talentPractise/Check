@@ -47,12 +47,12 @@ N-N DIFFERENT RATE ONLY
 
 {
   "membershipId": "5~265642286+34+44+20250201+784461+AM+39",
-  "zipCode": "50659",
+  "zipCode": "95630",
   "benefitProductType": "Medical",
   "languageCode": "11",
   "service": {
-    "code": "J7336",
-    "type": "HCPC"
+    "code": "44205",
+    "type": "CPT4",
     "description": "Adult Office visit Age 30-39",
     "supportingService": {
       "code": "470",
@@ -63,27 +63,25 @@ N-N DIFFERENT RATE ONLY
     },
     "diagnosisCode": "F33 40",
     "placeOfService": {
-      "code": "11"
+      "code": "21"
     }
   },
   "providerInfo": [
     {
-      "serviceLocation": "7480123",
-      "providerType": "OP",
+      "serviceLocation": "243235",
+      "providerType": "HO",
       "speciality": {
-        "code": "20104"
+        "code": ""
       },
-      "taxIdentificationNumber": "421211021",
-      "taxIdQualifier": "// Not provided in your data",
+      "taxIdentificationNumber": "942761692",
+      "taxIdQualifier": "",
       "providerNetworks": {
-        "networkID": "08845"
+        "networkID": "05144"
       },
-      "providerIdentificationNumber": "7688505",
-      "nationalProviderId": "1043203565",
-      "nationalNetworkParticipation": "// Not provided in your data",
-      "providerTier": "// Not provided in your data"
+      "providerIdentificationNumber": "6150705",
+      "nationalProviderId": "0000000000",
+      "nationalNetworkParticipation": "",
+      "providerTier": ""
     }
   ]
 }
-
-
