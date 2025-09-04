@@ -27,14 +27,14 @@
         "code": ""
       },
       "taxIdentificationNumber": "742019736",
-      "taxIdQualifier": "// Not provided in your data",
+      "taxIdQualifier": "",
       "providerNetworks": {
         "networkID": "02100"
       },
       "providerIdentificationNumber": "6549390",
       "nationalProviderId": "0000000000",
-      "nationalNetworkParticipation": "// Not provided in your data",
-      "providerTier": "// Not provided in your data"
+      "nationalNetworkParticipation": "",
+      "providerTier": ""
     }
   ]
 }
