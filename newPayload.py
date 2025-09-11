@@ -1,6 +1,6 @@
 {
   "membershipId": "5~265642286+34+44+20250201+784461+AM+39",
-  "zipCode": "08053",
+  "zipCode": "08060",
   "benefitProductType": "Medical",
   "languageCode": "11",
   "service": {
@@ -21,18 +21,18 @@
   },
   "providerInfo": [
     {
-      "serviceLocation": "11895727226157",
+      "serviceLocation": "7455557",
       "providerType": "",
       "speciality": {
-        "code": "91020"
+        "code": "91006"
       },
       "taxIdentificationNumber": "223500420",
       "taxIdQualifier": "",
       "providerNetworks": {
         "networkID": "04771"
       },
-      "providerIdentificationNumber": "4458179",
-      "nationalProviderId": "1205949468",
+      "providerIdentificationNumber": "7848860",
+      "nationalProviderId": "1295760247",
       "nationalNetworkParticipation": "",
       "providerTier": ""
     }
