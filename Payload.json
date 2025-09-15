@@ -1,38 +1,60 @@
-def _add_optional_rate_params(self, query, params):
-    # Split the query on GROUP BY
-    query_split_by_group_by = query.split("GROUP BY")
-    query = query_split_by_group_by[0].rstrip() + " "
+def _add_optional_rate_params(self, query: str, params: dict) -> str:
+    """
+    Spanner-efficient WHERE augmentation:
+      - Chooses SPECIALTY_CD once using WITH pick (IF(EXISTS(...), @spec, '')).
+      - Prefers 'providerspecialtycode' over 'providertype' if both present.
+      - Preserves original GROUP BY.
+    Expected Spanner params:
+      @service_cd, @service_type_cd, @pos, @product_cd, @pbg_list (ARRAY),
+      and either @providerspecialtycode or @providertype (we bind to @spec_code).
+    """
 
+    # 1) Decide which bind we're using for the specialty
     if "providerspecialtycode" in params:
-        query += """
-        AND SPECIALTY_CD = (
-            SELECT CASE 
-                     WHEN EXISTS (
-                       SELECT 1 
-                       FROM CET_RATES 
-                       WHERE SPECIALTY_CD = @providerspecialtycode
-                     )
-                     THEN @providerspecialtycode
-                     ELSE ''
-                   END
-        )
-        """
-
+        spec_bind = "@providerspecialtycode"
     elif "providertype" in params:
-        query += """
-        AND SPECIALTY_CD = (
-            SELECT CASE 
-                     WHEN EXISTS (
-                       SELECT 1 
-                       FROM CET_RATES 
-                       WHERE SPECIALTY_CD = @providertype
-                     )
-                     THEN @providertype
-                     ELSE ''
-                   END
-        )
-        """
+        spec_bind = "@providertype"
+    else:
+        # No specialty-related filtering requested – return the original query unchanged
+        return query
 
-    # Add back GROUP BY clause
-    query += "\nGROUP BY " + query_split_by_group_by[1]
-    return query
+    # 2) Split off (optional) GROUP BY to re-attach later
+    parts = query.split("GROUP BY", 1)
+    head = parts[0].rstrip()
+    tail = f"\nGROUP BY {parts[1]}" if len(parts) == 2 else ""
+
+    # 3) Prepend/merge the WITH pick block (if not already present)
+    # If your base query may already start with WITH, you can merge; here we safely add a WITH.
+    with_pick = f"""
+WITH pick AS (
+  SELECT IF(
+           EXISTS (
+             SELECT 1
+             FROM CET_RATES
+             WHERE SPECIALTY_CD = {spec_bind}
+           ),
+           {spec_bind},
+           ''
+         ) AS chosen_cd
+)
+"""
+
+    # 4) Ensure the head starts with SELECT; we inject the WITH right before it
+    head_stripped = head.lstrip()
+    if head_stripped.upper().startswith("SELECT"):
+        # add WITH pick before the SELECT
+        # find the left-trim offset to preserve original indentation if needed
+        offset = len(head) - len(head_stripped)
+        head = with_pick + head[offset:]
+    else:
+        # fallback: just prefix WITH pick
+        head = with_pick + head
+
+    # 5) Add the chosen equality predicate on SPECIALTY_CD
+    # (We tack it onto the WHERE block; assume the base query already has WHERE)
+    head += """
+  AND SPECIALTY_CD = (SELECT chosen_cd FROM pick)
+"""
+
+    # 6) Return recombined query
+    return head + tail
