@@ -37,3 +37,43 @@ GROUP BY
     b.payment_method_cd,
     b.service_group_changed_ind,
     b.service_grouping_priority_nbr;
+
+
+
+
+
+SELECT
+    payment_method_cd,
+    service_group_changed_ind,
+    service_grouping_priority_nbr,
+    MAX(rate) AS rate
+FROM CET_RATES
+WHERE
+    SERVICE_CD = '99283'
+    AND SERVICE_TYPE_CD = 'CPT4'
+    AND PLACE_OF_SERVICE_CD = '23'
+    AND (PRODUCT_CD = 'MC' OR PRODUCT_CD = 'ALL')
+    AND PROVIDER_BUSINESS_GROUP_NBR IN (769991465)
+    AND CONTRACT_TYPE IN ('C', 'N')
+    AND SPECIALTY_CD = (
+        SELECT CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM CET_RATES
+                WHERE SERVICE_CD = '99283'
+                    AND SERVICE_TYPE_CD = 'CPT4'
+                    AND PLACE_OF_SERVICE_CD = '23'
+                    AND (PRODUCT_CD = 'MC' OR PRODUCT_CD = 'ALL')
+                    AND PROVIDER_BUSINESS_GROUP_NBR IN (769991465)
+                    AND CONTRACT_TYPE IN ('C', 'N')
+                    AND SPECIALTY_CD = '90001'
+            )
+            THEN '90001'
+            ELSE ''
+        END
+    )
+GROUP BY
+    payment_method_cd,
+    service_group_changed_ind,
+    service_grouping_priority_nbr;
+
